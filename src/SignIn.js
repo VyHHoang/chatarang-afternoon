@@ -12,12 +12,7 @@ class SignIn extends Component {
     auth
       .signInWithPopup(googleProvider)
       .then(result => {
-        const { user } = result
-        this.props.handleAuth({
-          displayName: user.displayName,
-          email: user.email,
-          uid: user.uid,
-        })
+        this.props.handleAuth(result.user)
       })
   }
 
