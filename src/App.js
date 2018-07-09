@@ -4,6 +4,8 @@ import './App.css'
 import Main from './Main'
 import SignIn from './SignIn'
 
+import { auth } from './base'
+
 class App extends Component {
   constructor() {
     super()
@@ -25,6 +27,7 @@ class App extends Component {
   }
 
   signOut = () => {
+    auth.signOut()
     this.setState({ user: {} })
     localStorage.removeItem('user')
   }
