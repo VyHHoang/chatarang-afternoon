@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 
-import { auth, googleProvider } from './base'
+import { auth, googleProvider, githubProvider } from './base'
 
 class SignIn extends Component {
   state = {
     email: '',
   }
 
-  authenticate = () => {
+  authenticate = (provider) => {
     auth
-      .signInWithPopup(googleProvider)
+      .signInWithPopup(provider)
       .then(result => {
         this.props.handleAuth(result.user)
       })
@@ -43,6 +43,7 @@ class SignIn extends Component {
             className={css(styles.form)}
             onSubmit={this.handleSubmit}
           >
+            <h2>Sign In</h2>
             {/* <label
               htmlFor="email"
               className={css(styles.label)}
@@ -67,9 +68,19 @@ class SignIn extends Component {
             <button
               type="button"
               className={css(styles.button)}
-              onClick={this.authenticate}
+              onClick={() => this.authenticate(googleProvider)}
             >
+              <i className={`fab fa-google ${css(styles.brandIcon)}`}></i>
               Sign in with Google
+            </button>
+
+            <button
+              type="button"
+              className={css(styles.button, styles.github)}
+              onClick={() => this.authenticate(githubProvider)}
+            >
+              <i className={`fab fa-github ${css(styles.brandIcon)}`}></i>
+              Sign in with GitHub
             </button>
           </form>
 
@@ -118,15 +129,15 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     margin: '0 auto',
+    paddingBottom: '3rem',
   },
 
   form: {
     width: '40rem',
-    height: '15rem',
     backgroundColor: 'white',
     boxShadow: '0 1px 1px rgba(0,0,0,.1)',
     marginBottom: '2rem',
-    padding: '2rem 0 0',
+    paddingBottom: '2rem',
   },
 
   label: {
@@ -156,13 +167,22 @@ const styles = StyleSheet.create({
 
   button: {
     display: 'block',
-    margin: '0 auto',
+    margin: '0 auto 1rem',
     padding: '1rem 2rem',
     fontSize: '1.2rem',
     borderRadius: '1rem',
     backgroundColor: '#ff3333',
     color: 'white',
     width: '20rem',
+  },
+
+  github: {
+    marginBottom: 0,
+    backgroundColor: '#6e5494',
+  },
+
+  brandIcon: {
+    marginRight: '1rem',
   },
 })
 
