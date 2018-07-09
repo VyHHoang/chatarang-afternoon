@@ -9,25 +9,21 @@ class SignIn extends Component {
   }
 
   authenticate = (provider) => {
-    auth
-      .signInWithPopup(provider)
-      .then(result => {
-        this.props.handleAuth(result.user)
-      })
+    auth.signInWithPopup(provider)
   }
 
-  handleChange = (ev) => {
-    this.setState({ email: ev.target.value })
-  }
+  // handleChange = (ev) => {
+  //   this.setState({ email: ev.target.value })
+  // }
 
-  handleSubmit = (ev) => {
-    ev.preventDefault()
-    this.props.handleAuth({
-      uid: `${this.state.email}-ksdfjhu32472398`,
-      displayName: this.state.email,
-      email: this.state.email,
-    })
-  }
+  // handleSubmit = (ev) => {
+  //   ev.preventDefault()
+  //   this.props.handleAuth({
+  //     uid: `${this.state.email}-ksdfjhu32472398`,
+  //     displayName: this.state.email,
+  //     email: this.state.email,
+  //   })
+  // }
 
   render() {
     return (
