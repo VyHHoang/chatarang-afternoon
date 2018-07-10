@@ -16,18 +16,32 @@ class Chat extends Component {
   }
 
   componentDidMount() {
+    this.syncMessages()
+  }
+
+  componentDidUpdate(prevProps, _prevState, _snapshot) {
+    if (prevProps.room.name !== this.props.room.name) {
+      this.syncMessages()
+    }
+  }
+
+  componentWillUnmount() {
+    base.removeBinding(this.messagesRef)
+  }
+
+  syncMessages = () => {
+    if (this.messagesRef) {
+      base.removeBinding(this.messagesRef)
+    }
+
     this.messagesRef = base.syncState(
-      'messages/general',
+      `messages/${this.props.room.name}`,
       {
         context: this,
         state: 'messages',
         asArray: true,
       }
     )
-  }
-
-  componentWillUnmount() {
-    base.removeBinding(this.messagesRef)
   }
 
   addMessage = (body) => {
