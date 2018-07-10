@@ -13,6 +13,7 @@ class Main extends Component {
     },
 
     rooms: {},
+    showRoomForm: false,
   }
 
   componentDidMount() {
@@ -47,11 +48,22 @@ class Main extends Component {
     this.setState({ room })
   }
 
+  showRoomForm = () => {
+    this.setState({ showRoomForm: true })
+  }
+
+  hideRoomForm = () => {
+    this.setState({ showRoomForm: false })
+  }
+
   render() {
+    if (this.state.showRoomForm) {
+      return <RoomForm addRoom={this.addRoom} />
+    }
+
     return (
       <div className="Main" style={styles}>
-        <RoomForm addRoom={this.addRoom} />
-        {/* <Sidebar
+        <Sidebar
           user={this.props.user}
           signOut={this.props.signOut}
           rooms={this.state.rooms}
@@ -60,7 +72,7 @@ class Main extends Component {
         <Chat
           user={this.props.user}
           room={this.state.room}
-        /> */}
+        />
       </div>
     )
   }
