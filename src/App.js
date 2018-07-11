@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 
 import './App.css'
-import { auth } from './base'
+import base, { auth } from './base'
 import Main from './Main'
 import SignIn from './SignIn'
 import SignUp from './SignUp'
@@ -15,6 +15,7 @@ class App extends Component {
 
     this.state = {
       user: user || {},
+      displayName: null,
     }
   }
 
@@ -38,8 +39,34 @@ class App extends Component {
       email: oAuthUser.email,
       photoUrl: oAuthUser.photoURL,
     }
-    this.setState({ user })
+    this.syncUser(user)
     localStorage.setItem('user', JSON.stringify(user))
+  }
+
+  syncUser = user => {
+    if (this.state.displayName) {
+      user.displayName = this.state.displayName
+    }
+
+    this.userRef = base.syncState(
+      `users/${user.uid}`,
+      {
+        context: this,
+        state: 'user',
+        then: () => this.setState({ user }),
+      }
+    )
+  }
+
+  signUp = user => {
+    if (user.displayName) {
+      this.setState({ displayName: user.displayName })
+    }
+
+    return auth.createUserWithEmailAndPassword(
+      user.email,
+      user.password
+    )
   }
 
   signedIn = () => {
@@ -51,6 +78,10 @@ class App extends Component {
   }
 
   handleUnauth = () => {
+    if (this.userRef) {
+      base.removeBinding(this.userRef)
+    }
+
     this.setState({ user: {} })
     localStorage.removeItem('user')
   }
@@ -64,7 +95,7 @@ class App extends Component {
             render={() => (
               this.signedIn()
                 ? <Redirect to="/chat" />
-                : <SignUp />
+                : <SignUp signUp={this.signUp} />
             )}
           />
           <Route

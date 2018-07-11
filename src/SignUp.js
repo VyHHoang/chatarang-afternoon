@@ -8,6 +8,7 @@ class SignUp extends Component {
   state = {
     user: {
       email: '',
+      displayName: '',
       password: '',
       passwordConfirmation: '',
     },
@@ -23,10 +24,9 @@ class SignUp extends Component {
   handleSubmit = (ev) => {
     ev.preventDefault()
     if (this.passwordsMatch()) {
-      auth.createUserWithEmailAndPassword(
-        this.state.user.email,
-        this.state.user.password
-      ).catch(error => this.setState({ errorMessage: error.message }))
+      this.props
+        .signUp(this.state.user)
+        .catch(error => this.setState({ errorMessage: error.message }))
     }
   }
 
@@ -67,6 +67,20 @@ class SignUp extends Component {
               name="email"
               className={css(styles.input)}
               value={this.state.user.email}
+              onChange={this.handleChange}
+            />
+
+            <label
+              htmlFor="displayName"
+              className={css(styles.label)}
+            >
+              Display Name (optional)
+            </label>
+            <input
+              type="text"
+              name="displayName"
+              className={css(styles.input)}
+              value={this.state.user.displayName}
               onChange={this.handleChange}
             />
 
