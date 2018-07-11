@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
+import { Route, Switch, Redirect } from 'react-router-dom'
 
 import Sidebar from './Sidebar'
 import Chat from './Chat'
@@ -7,13 +8,8 @@ import base from './base'
 
 class Main extends Component {
   state = {
-    room: {
-      name: 's3afternoon',
-      description: 'Ask questions and share code',
-    },
-
+    room: {},
     rooms: {},
-    showRoomForm: false,
   }
 
   componentDidMount() {
@@ -46,7 +42,9 @@ class Main extends Component {
 
   setRoomFromRoute = () => {
     const { roomName } = this.props.match.params
-    this.setCurrentRoom(roomName)
+    if (roomName) {
+      this.setCurrentRoom(roomName)
+    }
   }
 
   addRoom = room => {
@@ -58,37 +56,62 @@ class Main extends Component {
 
   setCurrentRoom = roomName => {
     const room = this.state.rooms[roomName]
-    this.setState({ room })
+
+    if (room) {
+      this.setState({ room })
+    } else {
+      this.loadValidRoom()
+    }
   }
 
-  showRoomForm = () => {
-    this.setState({ showRoomForm: true })
+  loadValidRoom = () => {
+    const roomNames = Object.keys(this.state.rooms)
+    if (roomNames.length > 0) {
+      const roomName = roomNames[0]
+      this.props.history.push(`/chat/rooms/${roomName}`)
+    }
   }
 
-  hideRoomForm = () => {
-    this.setState({ showRoomForm: false })
+  roomIsLoaded() {
+    return this.state.room.name
   }
 
   render() {
-    if (this.state.showRoomForm) {
-      return <RoomForm
-               addRoom={this.addRoom}
-               hideRoomForm={this.hideRoomForm}
-             />
-    }
-
     return (
       <div className="Main" style={styles}>
-        <Sidebar
-          user={this.props.user}
-          signOut={this.props.signOut}
-          rooms={this.state.rooms}
-          showRoomForm={this.showRoomForm}
-        />
-        <Chat
-          user={this.props.user}
-          room={this.state.room}
-        />
+        <Switch>
+          <Route
+            path="/chat/new-room"
+            render={(navProps) => (
+              <RoomForm
+                addRoom={this.addRoom}
+                {...navProps}
+              />
+            )}
+          />
+          <Route
+            path="/chat/rooms/:roomName"
+            render={() => (
+                this.roomIsLoaded()
+                  ? <Fragment>
+                      <Sidebar
+                        user={this.props.user}
+                        signOut={this.props.signOut}
+                        rooms={this.state.rooms}
+                      />
+                      <Chat
+                        user={this.props.user}
+                        room={this.state.room}
+                      />
+                    </Fragment>
+                  : <div>Loading...</div>
+            )}
+          />
+          <Route render={() => (
+            <Redirect to="/chat/rooms/general" />
+          )} />
+        </Switch>
+
       </div>
     )
   }
