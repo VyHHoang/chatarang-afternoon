@@ -27,13 +27,26 @@ class Main extends Component {
             name: 'general',
             description: 'Chat about whatever',
           },
-        }
+        },
+        then: this.setRoomFromRoute,
       }
     )
   }
 
+  componentDidUpdate(prevProps) {
+    const { roomName } = this.props.match.params
+    if (prevProps.match.params.roomName !== roomName) {
+      this.setRoomFromRoute()
+    }
+  }
+
   componentWillUnmount() {
     base.removeBinding(this.roomsRef)
+  }
+
+  setRoomFromRoute = () => {
+    const { roomName } = this.props.match.params
+    this.setCurrentRoom(roomName)
   }
 
   addRoom = room => {
