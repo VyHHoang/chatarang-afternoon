@@ -2,19 +2,15 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 
-import { auth, googleProvider, githubProvider } from './base'
+import { auth } from './base'
 
-class SignIn extends Component {
+class SignUp extends Component {
   state = {
     user: {
       email: '',
       password: '',
     },
     errorMessage: null,
-  }
-
-  authenticate = (provider) => {
-    auth.signInWithPopup(provider)
   }
 
   handleChange = (ev) => {
@@ -25,7 +21,7 @@ class SignIn extends Component {
 
   handleSubmit = (ev) => {
     ev.preventDefault()
-    auth.signInWithEmailAndPassword(
+    auth.createUserWithEmailAndPassword(
       this.state.user.email,
       this.state.user.password
     ).catch(error => this.setState({ errorMessage: error.message }))
@@ -33,7 +29,7 @@ class SignIn extends Component {
 
   render() {
     return (
-      <div className={`SignIn ${css(styles.signIn)}`}>
+      <div className={`SignUp ${css(styles.signIn)}`}>
         <header className={css(styles.header)}>
           <span className={css(styles.title)}>
             <i className="fas fa-hashtag"></i>
@@ -45,7 +41,7 @@ class SignIn extends Component {
             className={css(styles.form)}
             onSubmit={this.handleSubmit}
           >
-            <h2>Sign In</h2>
+            <h2>Sign Up</h2>
 
             <label
               htmlFor="email"
@@ -82,7 +78,7 @@ class SignIn extends Component {
               type="submit"
               className={css(styles.button)}
             >
-              Sign In
+              Sign Up
             </button>
 
             <p className={css(styles.error)}>
@@ -90,37 +86,9 @@ class SignIn extends Component {
             </p>
 
             <p>
-              Not a member yet? <Link to="/sign-up">Sign up</Link>!
+              Already a member? <Link to="/sign-in">Sign in</Link>!
             </p>
-
-            OR
-            <div className={css(styles.buttonGroup)}>
-              <button
-                type="button"
-                className={css(styles.button)}
-                onClick={() => this.authenticate(googleProvider)}
-              >
-                <i className={`fab fa-google ${css(styles.brandIcon)}`}></i>
-                Sign in with Google
-              </button>
-
-              <button
-                type="button"
-                className={css(styles.button, styles.github)}
-                onClick={() => this.authenticate(githubProvider)}
-              >
-                <i className={`fab fa-github ${css(styles.brandIcon)}`}></i>
-                Sign in with GitHub
-              </button>
-            </div>
           </form>
-
-          <div className="blurb">
-            <h2 className={css(styles.h2)}>
-              You're in good company.
-            </h2>
-            <p>Ones of people are already using Chatarang.</p>
-          </div>
         </main>
       </div>
     )
@@ -227,4 +195,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default SignIn
+export default SignUp
