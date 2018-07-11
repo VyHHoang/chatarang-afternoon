@@ -4,6 +4,7 @@ import { Route, Switch, Redirect } from 'react-router-dom'
 import Sidebar from './Sidebar'
 import Chat from './Chat'
 import RoomForm from './RoomForm'
+import UserForm from './UserForm'
 import base from './base'
 
 class Main extends Component {
@@ -90,6 +91,15 @@ class Main extends Component {
     return (
       <div className="Main" style={styles}>
         <Switch>
+          <Route
+            path="/chat/profile"
+            render={(navProps) => (
+              <UserForm
+                user={this.props.user}
+                {...navProps}
+              />
+            )}
+          />
           <Route
             path="/chat/new-room"
             render={(navProps) => (

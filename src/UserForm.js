@@ -1,18 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { StyleSheet, css } from 'aphrodite'
 
-import { auth } from './base'
+class UserForm extends Component {
+  constructor(props) {
+    super(props)
 
-class SignUp extends Component {
-  state = {
-    user: {
-      email: '',
-      displayName: '',
-      password: '',
-      passwordConfirmation: '',
-    },
-    errorMessage: null,
+    this.state = {
+      user: this.props.user,
+      errorMessage: null,
+    }
   }
 
   handleChange = (ev) => {
@@ -38,9 +35,65 @@ class SignUp extends Component {
     return true
   }
 
+  isPasswordUser = () => {
+    return this.state.user.provider === 'password'
+  }
+
+  renderPasswordOnlyFields = () => {
+    return (
+      <Fragment>
+        <label
+          htmlFor="email"
+          className={css(styles.label)}
+        >
+          Email
+        </label>
+        <input
+          autoFocus
+          required
+          type="email"
+          name="email"
+          className={css(styles.input)}
+          value={this.state.user.email}
+          onChange={this.handleChange}
+        />
+
+        <label
+          htmlFor="password"
+          className={css(styles.label)}
+        >
+          Password
+        </label>
+        <input
+          required
+          type="password"
+          name="password"
+          className={css(styles.input)}
+          value={this.state.user.password}
+          onChange={this.handleChange}
+        />
+
+        <label
+          htmlFor="passwordConfirmation"
+          className={css(styles.label)}
+        >
+          Re-type Password
+        </label>
+        <input
+          required
+          type="password"
+          name="passwordConfirmation"
+          className={css(styles.input)}
+          value={this.state.user.passwordConfirmation}
+          onChange={this.handleChange}
+        />
+      </Fragment>
+    )
+  }
+
   render() {
     return (
-      <div className={`SignUp ${css(styles.signIn)}`}>
+      <div className={`UserForm ${css(styles.signIn)}`}>
         <header className={css(styles.header)}>
           <span className={css(styles.title)}>
             <i className="fas fa-hashtag"></i>
@@ -52,23 +105,7 @@ class SignUp extends Component {
             className={css(styles.form)}
             onSubmit={this.handleSubmit}
           >
-            <h2>Sign Up</h2>
-
-            <label
-              htmlFor="email"
-              className={css(styles.label)}
-            >
-              Email
-            </label>
-            <input
-              autoFocus
-              required
-              type="email"
-              name="email"
-              className={css(styles.input)}
-              value={this.state.user.email}
-              onChange={this.handleChange}
-            />
+            <h2>Update Profile</h2>
 
             <label
               htmlFor="displayName"
@@ -84,49 +121,19 @@ class SignUp extends Component {
               onChange={this.handleChange}
             />
 
-            <label
-              htmlFor="password"
-              className={css(styles.label)}
-            >
-              Password
-            </label>
-            <input
-              required
-              type="password"
-              name="password"
-              className={css(styles.input)}
-              value={this.state.user.password}
-              onChange={this.handleChange}
-            />
-
-            <label
-              htmlFor="passwordConfirmation"
-              className={css(styles.label)}
-            >
-              Re-type Password
-            </label>
-            <input
-              required
-              type="password"
-              name="passwordConfirmation"
-              className={css(styles.input)}
-              value={this.state.user.passwordConfirmation}
-              onChange={this.handleChange}
-            />
+            {
+              this.isPasswordUser() && this.renderPasswordOnlyFields()
+            }
 
             <button
               type="submit"
               className={css(styles.button)}
             >
-              Sign Up
+              Save Changes
             </button>
 
             <p className={css(styles.error)}>
               {this.state.errorMessage}
-            </p>
-
-            <p>
-              Already a member? <Link to="/sign-in">Sign in</Link>!
             </p>
           </form>
         </main>
@@ -222,4 +229,4 @@ const styles = StyleSheet.create({
 })
 
 
-export default SignUp
+export default UserForm

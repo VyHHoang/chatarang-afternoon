@@ -38,6 +38,7 @@ class App extends Component {
       displayName: oAuthUser.displayName,
       email: oAuthUser.email,
       photoUrl: oAuthUser.photoURL,
+      provider: oAuthUser.providerData[0].providerId,
     }
     this.syncUser(user)
     localStorage.setItem('user', JSON.stringify(user))
