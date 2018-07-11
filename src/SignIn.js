@@ -8,7 +8,8 @@ class SignIn extends Component {
     user: {
       email: '',
       password: '',
-    }
+    },
+    errorMessage: null,
   }
 
   authenticate = (provider) => {
@@ -26,7 +27,7 @@ class SignIn extends Component {
     auth.signInWithEmailAndPassword(
       this.state.user.email,
       this.state.user.password
-    )
+    ).catch(error => this.setState({ errorMessage: error.message }))
   }
 
   render() {
@@ -83,23 +84,30 @@ class SignIn extends Component {
               Sign In
             </button>
 
-            <button
-              type="button"
-              className={css(styles.button)}
-              onClick={() => this.authenticate(googleProvider)}
-            >
-              <i className={`fab fa-google ${css(styles.brandIcon)}`}></i>
-              Sign in with Google
-            </button>
+            <p className={css(styles.error)}>
+              {this.state.errorMessage}
+            </p>
 
-            <button
-              type="button"
-              className={css(styles.button, styles.github)}
-              onClick={() => this.authenticate(githubProvider)}
-            >
-              <i className={`fab fa-github ${css(styles.brandIcon)}`}></i>
-              Sign in with GitHub
-            </button>
+            OR
+            <div className={css(styles.buttonGroup)}>
+              <button
+                type="button"
+                className={css(styles.button)}
+                onClick={() => this.authenticate(googleProvider)}
+              >
+                <i className={`fab fa-google ${css(styles.brandIcon)}`}></i>
+                Sign in with Google
+              </button>
+
+              <button
+                type="button"
+                className={css(styles.button, styles.github)}
+                onClick={() => this.authenticate(githubProvider)}
+              >
+                <i className={`fab fa-github ${css(styles.brandIcon)}`}></i>
+                Sign in with GitHub
+              </button>
+            </div>
           </form>
 
           <div className="blurb">
@@ -202,6 +210,15 @@ const styles = StyleSheet.create({
   brandIcon: {
     marginRight: '1rem',
   },
+
+  buttonGroup: {
+    marginTop: '1rem',
+  },
+
+  error: {
+    color: '#ff3344',
+    height: '1.2rem',
+  }
 })
 
 
